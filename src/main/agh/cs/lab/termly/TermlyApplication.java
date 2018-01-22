@@ -3,6 +3,8 @@ package agh.cs.lab.termly;
 import agh.cs.lab.termly.argparser.ArgumentParser;
 import agh.cs.lab.termly.argparser.OptionParsers;
 
+import java.net.MalformedURLException;
+
 public class TermlyApplication {
 
     private static ArgumentParser configureArgumentParser() {
@@ -33,11 +35,19 @@ public class TermlyApplication {
         return argumentParser;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MalformedURLException{
         ArgumentParser argumentParser = configureArgumentParser();
 
         argumentParser.parse(args);
 
+        System.out.println(String.format("Longitude: %.2f Latitude: %.2f",
+                argumentParser.getResult("longitude"),
+                argumentParser.getResult("latitude")));
+
+        WebApiClient api = new WebApiClient("http://airapi.airly.eu/");
+
+        api.getAsString("v1/mapPoint/measurements?latitude=57&longitude=40" +
+                "&apikey=fae55480ef384880871f8b40e77bbef9");
 
     }
 }

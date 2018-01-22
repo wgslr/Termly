@@ -1,12 +1,6 @@
 package agh.cs.lab.termly.argparser;
 
-import agh.cs.actparser.ElementKind;
-import agh.cs.actparser.Identifier;
-import agh.cs.actparser.Range;
-
 import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This class contains several functions providing parsers for command line
