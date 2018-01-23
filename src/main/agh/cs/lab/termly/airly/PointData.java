@@ -25,8 +25,7 @@ public class PointData implements IApiResponse {
      */
     @Override
     public boolean isEmpty() {
-        return currentMeasurements.isEmpty() &&
-                Arrays.stream(history).allMatch(IApiResponse::isEmpty) &&
-                Arrays.stream(forecast).allMatch(IApiResponse::isEmpty);
+        return currentMeasurements == null || currentMeasurements.isEmpty()
+                || history == null;
     }
 }

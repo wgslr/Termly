@@ -14,15 +14,6 @@ public class TimestampedMeasurement implements IApiResponse {
         this.measurements = measurements;
     }
 
-    @Override
-    public String toString() {
-        return "TimestampedMeasurement{" +
-                "fromDateTime='" + fromDateTime + '\'' +
-                ", tillDateTime='" + tillDateTime + '\'' +
-                ", measurements=" + measurements +
-                '}';
-    }
-
     public LocalDateTime getFrom() {
         return LocalDateTime.parse(fromDateTime.substring(0, fromDateTime
                         .length() - 1), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -40,7 +31,7 @@ public class TimestampedMeasurement implements IApiResponse {
      */
     @Override
     public boolean isEmpty() {
-        return measurements.isEmpty();
+        return measurements == null || measurements.isEmpty();
     }
 }
 
