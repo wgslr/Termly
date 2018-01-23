@@ -7,12 +7,8 @@ import agh.cs.lab.termly.argparser.OptionParsers;
 import agh.cs.lab.termly.printers.DetailsPrinter;
 import agh.cs.lab.termly.printers.HistoryPrinter;
 import agh.cs.lab.termly.printers.IPrinter;
-import com.google.gson.Gson;
 
 import java.net.MalformedURLException;
-import java.net.StandardSocketOptions;
-import java.time.LocalDateTime;
-import java.time.Month;
 
 public class TermlyApplication {
 

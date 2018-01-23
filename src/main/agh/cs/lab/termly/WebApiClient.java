@@ -10,7 +10,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class WebApiClient {
