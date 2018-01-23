@@ -6,9 +6,16 @@ import java.util.Arrays;
  * Data about a map point as returned from the Airly API
  */
 public class PointData implements IApiResponse {
-    public Measurement currentMeasurements;
-    public TimestampedMeasurement[] history;
-    public TimestampedMeasurement[] forecast;
+    public final Measurement currentMeasurements;
+    public final TimestampedMeasurement[] history;
+    public final TimestampedMeasurement[] forecast;
+
+    private PointData(Measurement currentMeasurements, TimestampedMeasurement[] history,
+                     TimestampedMeasurement[] forecast) {
+        this.currentMeasurements = currentMeasurements;
+        this.history = history;
+        this.forecast = forecast;
+    }
 
 
     /**

@@ -4,9 +4,15 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class TimestampedMeasurement implements IApiResponse {
-    public String fromDateTime;
-    public String tillDateTime;
-    public Measurement measurements;
+    public final String fromDateTime;
+    public final String tillDateTime;
+    public final Measurement measurements;
+
+    public TimestampedMeasurement(String fromDateTime, String tillDateTime, Measurement measurements) {
+        this.fromDateTime = fromDateTime;
+        this.tillDateTime = tillDateTime;
+        this.measurements = measurements;
+    }
 
     @Override
     public String toString() {

@@ -1,6 +1,5 @@
 package agh.cs.lab.termly;
 
-import agh.cs.lab.termly.airly.AirlyDataProvider;
 import agh.cs.lab.termly.airly.PointData;
 import agh.cs.lab.termly.argparser.ArgumentParser;
 import agh.cs.lab.termly.argparser.OptionParsers;
@@ -10,11 +9,8 @@ import agh.cs.lab.termly.exceptions.DataUnavailableException;
 import agh.cs.lab.termly.printers.DetailsPrinter;
 import agh.cs.lab.termly.printers.HistoryPrinter;
 import agh.cs.lab.termly.printers.IPrinter;
-import com.sun.org.apache.xpath.internal.Arg;
 
-import javax.xml.crypto.Data;
 import java.net.MalformedURLException;
-import java.util.Optional;
 
 public class TermlyApplication {
 
