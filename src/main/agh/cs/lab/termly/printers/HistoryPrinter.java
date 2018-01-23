@@ -16,6 +16,7 @@ public class HistoryPrinter implements IPrinter {
     public void print(PointData pointData) {
         System.out.println(formatHeader());
         Arrays.stream(pointData.history)
+                .filter(row -> !row.isEmpty())
                 .sorted(Comparator.comparing(TimestampedMeasurement::getFrom)
                         .reversed())
                 .map(this::formatRow)
