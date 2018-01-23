@@ -128,7 +128,8 @@ public class ArgumentParser {
     }
 
     /**
-     * Returns result associated with given full option name.
+     * Returns result associated with given full option name or null if no
+     * matching result is found.
      * @param name Full option name
      * @param <T> Type of option's value
      * @return Found result

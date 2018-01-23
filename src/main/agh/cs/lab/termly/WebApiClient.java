@@ -53,10 +53,15 @@ public class WebApiClient {
         try {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            if (conn.getResponseCode() != EXPECTED_CODE) {
-                // TODO Specific exceptions
-                throw new ApiConnectionException("Invalid response code: " +
-                        conn.getResponseCode());
+            switch (conn.getResponseCode()) {
+                case EXPECTED_CODE:
+                    break;
+                case HttpURLConnection.HTTP_FORBIDDEN:
+                    throw new ApiConnectionException(
+                            "Invalid API key");
+                default:
+                    throw new ApiConnectionException(
+                            "Invalid response code: " + conn.getResponseCode());
             }
 
             BufferedReader reader = new BufferedReader(

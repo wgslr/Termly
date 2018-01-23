@@ -4,11 +4,15 @@ import agh.cs.lab.termly.airly.AirlyDataProvider;
 import agh.cs.lab.termly.airly.PointData;
 import agh.cs.lab.termly.argparser.ArgumentParser;
 import agh.cs.lab.termly.argparser.OptionParsers;
+import agh.cs.lab.termly.exceptions.ApiConnectionException;
+import agh.cs.lab.termly.exceptions.BadArgumentsException;
 import agh.cs.lab.termly.printers.DetailsPrinter;
 import agh.cs.lab.termly.printers.HistoryPrinter;
 import agh.cs.lab.termly.printers.IPrinter;
+import com.sun.org.apache.xpath.internal.Arg;
 
 import java.net.MalformedURLException;
+import java.util.Optional;
 
 public class TermlyApplication {
 
@@ -54,40 +58,58 @@ public class TermlyApplication {
             System.exit(0);
         }
 
-        String apiKey = "";
-        if (argumentParser.isSet("api-key")) {
-            apiKey = argumentParser.getResult("api-key");
-        } else if (System.getenv().containsKey("API_KEY")) {
-            apiKey = System.getenv().get("API_KEY");
-        } else {
-            System.out.println("Api key must be provided in an environmental " +
-                    "variable or via an argument");
+        try {
+            String apiKey = getApiKey(argumentParser);
+            IPrinter printer = getPrinter(argumentParser);
+
+            WebApiClient apiClient = new WebApiClient("http://airapi.airly.eu/");
+            AirlyDataProvider dataProvider = new AirlyDataProvider(apiKey, apiClient);
+
+            PointData data = null;
+
+            if (argumentParser.isSet("sensor-id")) {
+                String sensorId = argumentParser.getResult("sensor-id");
+                data = dataProvider.getSensorData(sensorId);
+
+            } else if (areCoordsSpecified(argumentParser)) {
+                Double latitude = argumentParser.getResult("latitude");
+                Double longitude = argumentParser.getResult("longitude");
+                data = dataProvider.getMapPoint(latitude, longitude);
+
+            } else {
+                throw new BadArgumentsException("Not enough location data provided");
+            }
+
+            printer.print(data);
+        } catch (BadArgumentsException e) {
+            System.out.println(e);
             System.exit(1);
+        } catch (ApiConnectionException e) {
+            System.out.println("Couldn't connect to the API: " + e.getMessage());
         }
-
-        IPrinter printer = argumentParser.getResult("history") ?
-                new HistoryPrinter() : new DetailsPrinter();
-
-        WebApiClient api = new WebApiClient("http://airapi.airly.eu/");
-        AirlyDataProvider dataProvider = new AirlyDataProvider
-                (apiKey, api);
-
-        PointData data = null;
-        if(argumentParser.isSet("sensor-id")) {
-            String sensorId = argumentParser.getResult("sensor-id");
-            data = dataProvider.getSensorData(sensorId);
-        } else if (argumentParser.isSet("latitude") && argumentParser.isSet
-                ("longitude")) {
-            Double latitude = argumentParser.getResult("latitude");
-            Double longitude = argumentParser.getResult("longitude");
-            data = dataProvider.getMapPoint(latitude, longitude);
-        } else {
-            System.out.println("You must provider sensor-id or latitude AND " +
-                    "longitude.");
-            System.exit(1);
-        }
-
-        printer.print(data);
-
     }
+
+    private static String getApiKey(ArgumentParser argumentParser) {
+        if (argumentParser.isSet("api-key")) {
+            return argumentParser.getResult("api-key");
+        } else if (System.getenv().containsKey("API_KEY")) {
+            return System.getenv().get("API_KEY");
+        } else {
+            throw new BadArgumentsException(
+                    "API key must be provided in environment or arguments");
+        }
+    }
+
+
+    private static IPrinter getPrinter(ArgumentParser argumentParser) {
+        return argumentParser.getResult("history") ?
+                new HistoryPrinter() : new DetailsPrinter();
+    }
+
+    private static boolean areCoordsSpecified(ArgumentParser argumentParser) {
+        return argumentParser.isSet("latitude") &&
+                argumentParser.isSet("longitude");
+    }
+
+
 }
