@@ -6,11 +6,13 @@ import agh.cs.lab.termly.argparser.ArgumentParser;
 import agh.cs.lab.termly.argparser.OptionParsers;
 import agh.cs.lab.termly.exceptions.ApiConnectionException;
 import agh.cs.lab.termly.exceptions.BadArgumentsException;
+import agh.cs.lab.termly.exceptions.DataUnavailableException;
 import agh.cs.lab.termly.printers.DetailsPrinter;
 import agh.cs.lab.termly.printers.HistoryPrinter;
 import agh.cs.lab.termly.printers.IPrinter;
 import com.sun.org.apache.xpath.internal.Arg;
 
+import javax.xml.crypto.Data;
 import java.net.MalformedURLException;
 import java.util.Optional;
 
@@ -52,8 +54,6 @@ public class TermlyApplication {
     public static void main(String[] args) throws MalformedURLException {
         // TODO javadoc
 
-        // TODO error on empty data
-
         // TODO ascii art
 
 
@@ -94,6 +94,9 @@ public class TermlyApplication {
         } catch (ApiConnectionException e) {
             System.out.println("Couldn't connect to the API: " + e.getMessage());
             System.exit(1);
+        } catch(DataUnavailableException e) {
+            System.out.println("There are no data available for this location");
+            System.exit(1);
         } catch (Exception e) {
             System.out.println("Unexpected error: " + e.getMessage());
             System.exit(1);
@@ -121,6 +124,4 @@ public class TermlyApplication {
         return argumentParser.isSet("latitude") &&
                 argumentParser.isSet("longitude");
     }
-
-
 }

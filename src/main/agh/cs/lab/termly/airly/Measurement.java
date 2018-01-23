@@ -3,7 +3,7 @@ package agh.cs.lab.termly.airly;
 /**
  * Measurement data as returned by the airly API
  */
-public class Measurement {
+public class Measurement implements IApiResponse {
     public double airQualityIndex;
     public double humidity;
     public String measurementTime;
