@@ -18,6 +18,7 @@ public class AirlyDataProvider implements IDataProvider {
         this.client = client;
     }
 
+    @Override
     public PointData getMapPoint(double latitude, double longitude) {
         List<RequestParam> params = Arrays.asList(
                 new RequestParam("apikey", apiKey),
@@ -29,6 +30,7 @@ public class AirlyDataProvider implements IDataProvider {
                 PointData.class);
     }
 
+    @Override
     public PointData getSensorData(String sensorId) {
         List<RequestParam> params = Arrays.asList(
                 new RequestParam("apikey", apiKey),
