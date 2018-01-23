@@ -1,9 +1,13 @@
 package agh.cs.lab.termly;
 
+import agh.cs.lab.termly.airly.AirlyDataProvider;
 import agh.cs.lab.termly.argparser.ArgumentParser;
 import agh.cs.lab.termly.argparser.OptionParsers;
+import com.google.gson.Gson;
 
 import java.net.MalformedURLException;
+import java.time.LocalDateTime;
+import java.time.Month;
 
 public class TermlyApplication {
 

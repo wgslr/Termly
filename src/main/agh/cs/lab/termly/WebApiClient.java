@@ -9,8 +9,27 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class WebApiClient {
+
+    public static class RequestParam {
+        public final String key;
+        public final String value;
+
+        public RequestParam(String key, Object value) {
+            this.key = key;
+            this.value = value.toString();
+        }
+
+        @Override
+        public String toString() {
+            return key + "=" + value;
+        }
+    }
+
 
     private final String apiUrl;
 
@@ -24,10 +43,10 @@ public class WebApiClient {
      * Requests a JSON resource from given endpoint and parses the response
      * into the desired object type.
      */
-    public <T> T get(String endpoint, Class<T> type) {
+    public <T> T get(String endpoint, Collection params, Class<T> type) {
         URL url;
         try {
-            url = new URL(apiUrl + endpoint);
+            url = prepareURL(endpoint, params);
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException(e);
         }
@@ -35,7 +54,7 @@ public class WebApiClient {
         try {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            if(conn.getResponseCode() != EXPECTED_CODE) {
+            if (conn.getResponseCode() != EXPECTED_CODE) {
                 // TODO Specific exceptions
                 throw new ApiConnectionException("Invalid response code: " +
                         conn.getResponseCode());
@@ -49,7 +68,14 @@ public class WebApiClient {
         } catch (IOException e) {
             throw new ApiConnectionException(e);
         }
+    }
 
+    private URL prepareURL(String endpoint, Collection<RequestParam> params)
+            throws MalformedURLException {
+        return new URL(apiUrl + endpoint + "?" +
+                params.stream()
+                        .map((RequestParam rp) -> rp.toString())
+                        .collect(Collectors.joining("&")));
     }
 
 
