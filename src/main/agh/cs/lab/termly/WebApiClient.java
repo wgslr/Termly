@@ -1,81 +1,55 @@
 package agh.cs.lab.termly;
 
+import agh.cs.lab.termly.exceptions.ApiConnectionException;
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.Arrays;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 public class WebApiClient {
 
-    class HistoryEntry {
-        private String fromDateTime;
-        private String tillDateTime;
-
-        @Override
-        public String toString() {
-            return fromDateTime +  " - " + tillDateTime;
-        }
-    }
-
-    class Response {
-        public HistoryEntry history[];
-
-        @Override
-        public String toString() {
-            return Arrays.stream(history).map(HistoryEntry::toString).collect
-                    (Collectors.joining("\n"));
-        }
-    }
-
-
     private final String apiUrl;
 
-    private static final int EXPECTED_STATUS = HttpURLConnection.HTTP_OK;
+    private static final int EXPECTED_CODE = HttpURLConnection.HTTP_OK;
 
     public WebApiClient(String apiUrl) {
         this.apiUrl = apiUrl;
     }
 
-    String getAsString(String endpoint) throws MalformedURLException{
-        URL url = new URL(apiUrl + endpoint);
+    /**
+     * Requests a JSON resource from given endpoint and parses the response
+     * into the desired object type.
+     */
+    public <T> T get(String endpoint, Class<T> type) {
+        URL url;
+        try {
+            url = new URL(apiUrl + endpoint);
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException(e);
+        }
 
         try {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            System.out.println(conn);
-            System.out.println(conn.getResponseCode());
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader
-                    (conn.getInputStream()));
+            if(conn.getResponseCode() != EXPECTED_CODE) {
+                // TODO Specific exceptions
+                throw new ApiConnectionException("Invalid response code: " +
+                        conn.getResponseCode());
+            }
 
-//            reader.lines().forEach(System.out::println);
-
-//            String content = reader.lines().collect(Collectors.joining("\n"));
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream()));
 
             Gson gson = new Gson();
-            Response result = gson.fromJson(reader, Response.class);
-
-            System.out.println(result);
-
-//            JsonReader jsonReader = new JsonReader(new InputStreamReader(conn
-//                    .getInputStream()));
-
-//            jsonReader.beginObject();
-//            jsonReader.has
-
-
-
-        } catch (Exception e) {
-            // TODO
+            return gson.fromJson(reader, type);
+        } catch (IOException e) {
+            throw new ApiConnectionException(e);
         }
-        return "";
+
     }
 
 
