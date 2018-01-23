@@ -59,7 +59,7 @@ public class ArgumentParser {
         }
         if (shortNameToOption.containsKey(option.shortName)) {
             throw new IllegalArgumentException(
-                    "Option with short name \"" + option.name +
+                    "Option with short name \"" + option.shortName +
                             "\" is already defined");
         }
 
@@ -109,7 +109,7 @@ public class ArgumentParser {
         Pattern pattern;
 
         if (isFullname) {
-            pattern = Pattern.compile("--(\\p{L}+)");
+            pattern = Pattern.compile("--([\\p{L}\\p{Punct}]+)");
             dictionary = nameToOption;
         } else {
             pattern = Pattern.compile("-(\\p{L})");

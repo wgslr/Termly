@@ -5,7 +5,6 @@ import agh.cs.lab.termly.WebApiClient;
 import agh.cs.lab.termly.WebApiClient.RequestParam;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 public class AirlyDataProvider implements IDataProvider {
@@ -19,26 +18,24 @@ public class AirlyDataProvider implements IDataProvider {
         this.client = client;
     }
 
-    public MapPoint getMapPoint(double latitude, double longitude) {
+    public PointData getMapPoint(double latitude, double longitude) {
         List<RequestParam> params = Arrays.asList(
                 new RequestParam("apikey", apiKey),
                 new RequestParam("longitude", longitude),
                 new RequestParam("latitude", latitude)
         );
 
-        MapPoint mp = client.get("/v1/mapPoint/measurements", params,
-                MapPoint.class);
-        return mp;
+        return client.get("/v1/mapPoint/measurements", params,
+                PointData.class);
     }
 
-    public MapPoint getSensorData(String sensorId) {
+    public PointData getSensorData(String sensorId) {
         List<RequestParam> params = Arrays.asList(
                 new RequestParam("apikey", apiKey),
                 new RequestParam("sensorId", sensorId)
                 );
-        MapPoint mp = client.get
-                ("/v1/sensor/measurements", params, MapPoint.class);
-        return mp;
+        return client.get
+                ("/v1/sensor/measurements", params, PointData.class);
     }
 
 }

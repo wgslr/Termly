@@ -74,7 +74,7 @@ public class WebApiClient {
             throws MalformedURLException {
         return new URL(apiUrl + endpoint + "?" +
                 params.stream()
-                        .map((RequestParam rp) -> rp.toString())
+                        .map(RequestParam::toString)
                         .collect(Collectors.joining("&")));
     }
 

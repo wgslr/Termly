@@ -1,11 +1,16 @@
 package agh.cs.lab.termly;
 
 import agh.cs.lab.termly.airly.AirlyDataProvider;
+import agh.cs.lab.termly.airly.PointData;
 import agh.cs.lab.termly.argparser.ArgumentParser;
 import agh.cs.lab.termly.argparser.OptionParsers;
+import agh.cs.lab.termly.printers.DetailsPrinter;
+import agh.cs.lab.termly.printers.HistoryPrinter;
+import agh.cs.lab.termly.printers.IPrinter;
 import com.google.gson.Gson;
 
 import java.net.MalformedURLException;
+import java.net.StandardSocketOptions;
 import java.time.LocalDateTime;
 import java.time.Month;
 
@@ -27,7 +32,7 @@ public class TermlyApplication {
                 "ID of a sensor to obtain data from",
                 OptionParsers.getStringParser()
         ));
-        argumentParser.addOption(new ArgumentParser.Option("history", "h",
+        argumentParser.addOption(new ArgumentParser.Option("history", "y",
                 "Enable display of historical data",
                 OptionParsers.getBooleanParser()
         ));
@@ -35,39 +40,58 @@ public class TermlyApplication {
                 "API key to use for communication with the airly API",
                 OptionParsers.getStringParser()
         ));
+        argumentParser.addOption(new ArgumentParser.Option("help", "h",
+                "Display help",
+                OptionParsers.getBooleanParser()
+
+        ));
 
         return argumentParser;
     }
 
     public static void main(String[] args) throws MalformedURLException {
         ArgumentParser argumentParser = configureArgumentParser();
-
         argumentParser.parse(args);
 
-        Gson g = new Gson();
-//        System.out.println(
-//                g.fromJson("2018-01-23T13:59:59Z'", LocalDateTime.class));
+        if (argumentParser.getResult("help")) {
+            System.out.println(argumentParser.getArgsHelp());
+            System.exit(0);
+        }
 
-        System.out.println(g.toJson(LocalDateTime.of(1994, Month.APRIL, 15, 11,
-                30)));
+        String apiKey = "";
+        if (argumentParser.isSet("api-key")) {
+            apiKey = argumentParser.getResult("api-key");
+        } else if (System.getenv().containsKey("API_KEY")) {
+            apiKey = System.getenv().get("API_KEY");
+        } else {
+            System.out.println("Api key must be provided in an environmental " +
+                    "variable or via an argument");
+            System.exit(1);
+        }
 
-
-        System.out.println(String.format("Longitude: %.2f Latitude: %.2f",
-                argumentParser.getResult("longitude"),
-                argumentParser.getResult("latitude")));
+        IPrinter printer = argumentParser.getResult("history") ?
+                new HistoryPrinter() : new DetailsPrinter();
 
         WebApiClient api = new WebApiClient("http://airapi.airly.eu/");
-
         AirlyDataProvider dataProvider = new AirlyDataProvider
-                ("fae55480ef384880871f8b40e77bbef9", api);
+                (apiKey, api);
 
-//        Gson gson = new Gson();
-        System.out.println(dataProvider.getMapPoint(50, 19.6));
+        PointData data = null;
+        if(argumentParser.isSet("sensor-id")) {
+            String sensorId = argumentParser.getResult("sensor-id");
+            data = dataProvider.getSensorData(sensorId);
+        } else if (argumentParser.isSet("latitude") && argumentParser.isSet
+                ("longitude")) {
+            Double latitude = argumentParser.getResult("latitude");
+            Double longitude = argumentParser.getResult("longitude");
+            data = dataProvider.getMapPoint(latitude, longitude);
+        } else {
+            System.out.println("You must provider sensor-id or latitude AND " +
+                    "longitude.");
+            System.exit(1);
+        }
 
-        System.out.println(dataProvider.getSensorData("1026"));
-
-//        api.getAsString("v1/mapPoint/measurements?latitude=57&longitude=40" +
-//                "&apikey=fae55480ef384880871f8b40e77bbef9");
+        printer.print(data);
 
     }
 }
