@@ -1,5 +1,7 @@
 package agh.cs.lab.termly.argparser;
 
+import agh.cs.lab.termly.exceptions.BadArgumentsException;
+
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.function.Function;
@@ -74,7 +76,7 @@ public class ArgumentParser {
     /**
      * Sets options values according to given args.
      * @param args Provider arguments
-     * @throws IllegalArgumentException if given args contain unexpected value
+     * @throws BadArgumentsException if given args contain unexpected value
      */
     public void parse(String[] args) {
         for (int i = 0; i < args.length; ++i) {
@@ -85,7 +87,7 @@ public class ArgumentParser {
                 nameToResult.put(param.name, true);
             } else {
                 if (args.length <= i + 1) {
-                    throw new IllegalArgumentException(
+                    throw new BadArgumentsException(
                             "Missing value for argument \"" + args[i] + "\"");
                 }
 
@@ -120,7 +122,7 @@ public class ArgumentParser {
         Option searchResult = Optional.of(m)
                 .map(x -> m.matches() ? m : null)
                 .map(x -> dictionary.get(m.group(1)))
-                .orElseThrow(() -> new IllegalArgumentException
+                .orElseThrow(() -> new BadArgumentsException
                         (String.format("\"%s\" is not a valid argument name",
                                 arg)));
 

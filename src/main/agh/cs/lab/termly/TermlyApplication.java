@@ -50,20 +50,22 @@ public class TermlyApplication {
     }
 
     public static void main(String[] args) throws MalformedURLException {
-        ArgumentParser argumentParser = configureArgumentParser();
-        argumentParser.parse(args);
 
-        if (argumentParser.getResult("help")) {
-            System.out.println(argumentParser.getArgsHelp());
-            System.exit(0);
-        }
 
         try {
+            ArgumentParser argumentParser = configureArgumentParser();
+            argumentParser.parse(args);
+
+            if (argumentParser.getResult("help")) {
+                System.out.println(argumentParser.getArgsHelp());
+                System.exit(0);
+            }
+
             String apiKey = getApiKey(argumentParser);
             IPrinter printer = getPrinter(argumentParser);
 
             WebApiClient apiClient = new WebApiClient("http://airapi.airly.eu/");
-            AirlyDataProvider dataProvider = new AirlyDataProvider(apiKey, apiClient);
+            IDataProvider dataProvider = new AirlyDataProvider(apiKey, apiClient);
 
             PointData data = null;
 
@@ -82,10 +84,14 @@ public class TermlyApplication {
 
             printer.print(data);
         } catch (BadArgumentsException e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
             System.exit(1);
         } catch (ApiConnectionException e) {
             System.out.println("Couldn't connect to the API: " + e.getMessage());
+            System.exit(1);
+        } catch (Exception e) {
+            System.out.println("Unexpected error: " + e.getMessage());
+            System.exit(1);
         }
     }
 
