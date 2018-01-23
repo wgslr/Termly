@@ -50,6 +50,11 @@ public class TermlyApplication {
     }
 
     public static void main(String[] args) throws MalformedURLException {
+        // TODO javadoc
+
+        // TODO error on empty data
+
+        // TODO ascii art
 
 
         try {
