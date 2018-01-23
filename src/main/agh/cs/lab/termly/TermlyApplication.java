@@ -39,10 +39,18 @@ public class TermlyApplication {
         return argumentParser;
     }
 
-    public static void main(String[] args) throws MalformedURLException{
+    public static void main(String[] args) throws MalformedURLException {
         ArgumentParser argumentParser = configureArgumentParser();
 
         argumentParser.parse(args);
+
+        Gson g = new Gson();
+//        System.out.println(
+//                g.fromJson("2018-01-23T13:59:59Z'", LocalDateTime.class));
+
+        System.out.println(g.toJson(LocalDateTime.of(1994, Month.APRIL, 15, 11,
+                30)));
+
 
         System.out.println(String.format("Longitude: %.2f Latitude: %.2f",
                 argumentParser.getResult("longitude"),
@@ -50,8 +58,16 @@ public class TermlyApplication {
 
         WebApiClient api = new WebApiClient("http://airapi.airly.eu/");
 
-        api.getAsString("v1/mapPoint/measurements?latitude=57&longitude=40" +
-                "&apikey=fae55480ef384880871f8b40e77bbef9");
+        AirlyDataProvider dataProvider = new AirlyDataProvider
+                ("fae55480ef384880871f8b40e77bbef9", api);
+
+//        Gson gson = new Gson();
+        System.out.println(dataProvider.getMapPoint(50, 19.6));
+
+        System.out.println(dataProvider.getSensorData("1026"));
+
+//        api.getAsString("v1/mapPoint/measurements?latitude=57&longitude=40" +
+//                "&apikey=fae55480ef384880871f8b40e77bbef9");
 
     }
 }
