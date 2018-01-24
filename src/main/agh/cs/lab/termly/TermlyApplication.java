@@ -17,7 +17,6 @@ public class TermlyApplication {
     private static ArgumentParser configureArgumentParser() {
         ArgumentParser argumentParser = new ArgumentParser();
 
-        //argumentParser.addOption();
         argumentParser.addOption(new ArgumentParser.Option("latitude", "a",
                 "Latitude of the point on map",
                 OptionParsers.getDoubleParser()
@@ -27,7 +26,7 @@ public class TermlyApplication {
                 OptionParsers.getDoubleParser()
         ));
         argumentParser.addOption(new ArgumentParser.Option("sensor-id", "s",
-                "ID of a sensor to obtain data from",
+                "ID of the sensor to obtain data from",
                 OptionParsers.getStringParser()
         ));
         argumentParser.addOption(new ArgumentParser.Option("history", "y",
@@ -48,13 +47,8 @@ public class TermlyApplication {
     }
 
     public static void main(String[] args) throws MalformedURLException {
-        // TODO javadoc
-
-        // TODO ascii art
-
-
+        ArgumentParser argumentParser = configureArgumentParser();
         try {
-            ArgumentParser argumentParser = configureArgumentParser();
             argumentParser.parse(args);
 
             if (argumentParser.getResult("help")) {
@@ -84,8 +78,11 @@ public class TermlyApplication {
             }
 
             printer.print(data);
+
         } catch (BadArgumentsException e) {
             System.out.println(e.getMessage());
+            System.out.println("The available arguments are: ");
+            System.out.println(argumentParser.getArgsHelp());
             System.exit(1);
         } catch (ApiConnectionException e) {
             System.out.println("Couldn't connect to the API: " + e.getMessage());

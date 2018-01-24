@@ -3,14 +3,15 @@ package agh.cs.lab.termly.airly;
 import java.util.Arrays;
 
 /**
- * Data about a map point as returned from the Airly API
+ * Pollution and weather data in a specific location
+ * as returned by the Airly API.
  */
 public class PointData implements IApiResponse {
     public final Measurement currentMeasurements;
     public final TimestampedMeasurement[] history;
     public final TimestampedMeasurement[] forecast;
 
-    private PointData(Measurement currentMeasurements, TimestampedMeasurement[] history,
+    public PointData(Measurement currentMeasurements, TimestampedMeasurement[] history,
                      TimestampedMeasurement[] forecast) {
         this.currentMeasurements = currentMeasurements;
         this.history = history;

@@ -12,6 +12,9 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+/**
+ * Object responsible for connecting to an HTTP API endpoint returing JSON data.
+ */
 public class WebApiClient {
 
     public static class RequestParam {
@@ -42,7 +45,7 @@ public class WebApiClient {
      * Requests a JSON resource from given endpoint and parses the response
      * into the desired object type.
      */
-    public <T> T get(String endpoint, Collection params, Class<T> type) {
+    public <T> T get(String endpoint, Collection<RequestParam> params, Class<T> type) {
         URL url;
         try {
             url = prepareURL(endpoint, params);

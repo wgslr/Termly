@@ -4,13 +4,15 @@ import agh.cs.lab.termly.PollutionLevel;
 import agh.cs.lab.termly.airly.Measurement;
 import agh.cs.lab.termly.airly.PointData;
 
+/**
+ * Printer displaying current measurements and an ASCII-art indicator of pollution level.
+ */
 public class DetailsPrinter implements IPrinter {
     @Override
     public void print(PointData pointData) {
         Measurement data = pointData.currentMeasurements;
 
-        String asciiArt = PollutionLevel.getByCAQI(new Double(data.airQualityIndex).intValue())
-                .toAsciiArt();
+        String asciiArt = PollutionLevel.getByCAQI(data.airQualityIndex).toAsciiArt();
 
         String information = String.format("PM2.5: %.0f μg/m^3\n" +
                         "PM10: %.2f μg/m^3\n" +

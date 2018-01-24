@@ -33,8 +33,8 @@ public class Measurement implements IApiResponse {
                 windSpeed == 0;
     }
 
-    // Contructor required for the final fields.
-    // Inline constant defaults cannot be used as it prvents
+    // Constructor required because of the final fields.
+    // Inline constant defaults cannot be used as it prevents
     // proper updating of the values by the GSON deserializer
     // See https://docs.oracle.com/javase/specs/jls/se7/html/jls-17.html#jls-17.5.3
     public Measurement(double airQualityIndex, double humidity, String measurementTime,

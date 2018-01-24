@@ -3,6 +3,10 @@ package agh.cs.lab.termly;
 import java.util.Arrays;
 import java.util.Comparator;
 
+/**
+ * Describes a pollution level, defined in relation to the air quality index.
+ * See https://www.airqualitynow.eu/about_indices_definition.php
+ */
 public enum PollutionLevel {
     VERY_LOW(0),
     LOW(25),
@@ -16,7 +20,10 @@ public enum PollutionLevel {
         this.minLevel = minLevel;
     }
 
-    public static PollutionLevel getByCAQI(int level) {
+    /**
+     * Returns {@link PollutionLevel} matching given air quality index level.
+     */
+    public static PollutionLevel getByCAQI(double level) {
         return Arrays.stream(PollutionLevel.values())
                 .sorted(Comparator.comparing((PollutionLevel x) -> x.minLevel).reversed())
                 .filter(x -> level >= x.minLevel)

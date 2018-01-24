@@ -8,6 +8,8 @@ import java.util.function.Function;
  */
 public class OptionParsers {
     static public Function<String, String> getBooleanParser() {
+        // A boolean flag argument can only be present or not
+        // - it does not have a value to be parsed.
         return null;
     }
 
