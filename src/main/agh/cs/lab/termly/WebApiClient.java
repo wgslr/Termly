@@ -48,7 +48,7 @@ public class WebApiClient {
     public <T> T get(String endpoint, Collection<RequestParam> params, Class<T> type) {
         URL url;
         try {
-            url = prepareURL(endpoint, params);
+            url = buildURL(endpoint, params);
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException(e);
         }
@@ -77,7 +77,7 @@ public class WebApiClient {
         }
     }
 
-    private URL prepareURL(String endpoint, Collection<RequestParam> params)
+    private URL buildURL(String endpoint, Collection<RequestParam> params)
             throws MalformedURLException {
         return new URL(apiUrl + endpoint + "?" +
                 params.stream()
