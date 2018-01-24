@@ -1,5 +1,6 @@
 # Termly
-Console client for the airly.eu API
+Basic command line client for the [airly.eu](http://airly.eu) API.  
+AGH University OOP class assignment.
 
 ## Arguments:
 ```bash
